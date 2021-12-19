@@ -32,7 +32,7 @@ pub fn convert_binary_to_int(input: &str) -> u32
   num
 }
 
-pub fn sha256(data: &str) -> String
+pub fn sha256_digest(data: &str) -> std::vec::Vec::<u32>
 {
   let mut h0: u32 = 0x6a09e667;
   let mut h1: u32 = 0xbb67ae85;
@@ -124,16 +124,35 @@ pub fn sha256(data: &str) -> String
     h6 = h6.wrapping_add(g);
     h7 = h7.wrapping_add(h);
   }  
-  //let digest_u32 = vec![h0, h1, h2, h3, h4, h5, h6, h7];
-  let hash = vec![format!("{:08X}", h0),
-                  format!("{:08X}", h1),
-                  format!("{:08X}", h2),
-                  format!("{:08X}", h3),
-                  format!("{:08X}", h4),
-                  format!("{:08X}", h5),
-                  format!("{:08X}", h6),
-                  format!("{:08X}", h7)].join("");
+  let digest_u32 = vec![h0, h1, h2, h3, h4, h5, h6, h7];
+
+  digest_u32
+}
+
+pub fn sha256(data: &str) -> String
+{
+  let digest_u32 = sha256_digest(data);
+  let hash = vec![format!("{:08X}", digest_u32[0]),
+                  format!("{:08X}", digest_u32[1]),
+                  format!("{:08X}", digest_u32[2]),
+                  format!("{:08X}", digest_u32[3]),
+                  format!("{:08X}", digest_u32[4]),
+                  format!("{:08X}", digest_u32[5]),
+                  format!("{:08X}", digest_u32[6]),
+                  format!("{:08X}", digest_u32[7])].join("");
   hash
+
+}
+
+pub fn sha256_bytes(data: &str) -> std::vec::Vec<u8>
+{
+  let digest_u32 = sha256_digest(data);
+  let mut bytes = vec![0 as u8; 8*4];
+  for i in 0..bytes.len()
+  {
+    bytes[i] = (digest_u32[i/4] >> (24 - (i % 4) * 8)) as u8;
+  }
+  bytes
 }
 
 #[cfg(test)]
