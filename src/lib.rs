@@ -1,4 +1,4 @@
-pub fn print_int_as_binary(input: i32) -> String
+pub fn int_to_string_binary(input: i32) -> String
 {
   let mut output: [i32; 32] = [0; 32];
   let mut num: i32 = input;
@@ -58,7 +58,6 @@ pub fn sha256(data: &str) -> String
 
   let data_length = data.len() * 8; //in bits
   let data_as_bytes = data.as_bytes();
-  println!("{:?}", data_as_bytes);
 
   let additional_padding_length = 512 - ((data_length + 1 + 64) % 512);
   let overall_length = (data_length + 1 + additional_padding_length + 64) / 32;
